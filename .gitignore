@@ -1,0 +1,39 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+crash.log
+crash.*.log
+
+# Variables con datos sensibles (email, webhooks)
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Planes guardados (pueden contener secretos)
+*.tfplan
+tfplan
+
+# Artefactos de build de las Lambdas (se regeneran con terraform)
+.builds/
+*.zip
+
+# Credenciales AWS — nunca deberían estar acá, pero por las dudas
+.env
+*.pem
+credentials
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/

@@ -1,0 +1,90 @@
+name: Security Scan
+
+# Corre en cada Pull Request y en cada push a main.
+# NO necesita credenciales de AWS: todo es análisis estático del código.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # --------------------------------------------------------
+  # 1. Terraform: formato, sintaxis y validación
+  # --------------------------------------------------------
+  terraform-validate:
+    name: Terraform fmt + validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.15.6"
+
+      - name: Formato consistente
+        run: terraform fmt -check -recursive
+
+      # -backend=false: validar sin conectarse a AWS ni al estado remoto.
+      - name: Init (sin backend)
+        run: terraform init -backend=false
+
+      - name: Validar configuración
+        run: terraform validate
+
+  # --------------------------------------------------------
+  # 2. tfsec: análisis de seguridad del IaC
+  # --------------------------------------------------------
+  tfsec:
+    name: tfsec
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: tfsec scan
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working_directory: terraform
+          # El honeypot está expuesto a propósito (SSH/HTTP al mundo). Esos
+          # hallazgos son esperables; revisalos pero no rompen el build.
+          soft_fail: true
+
+  # --------------------------------------------------------
+  # 3. Checkov: políticas de seguridad y compliance
+  # --------------------------------------------------------
+  checkov:
+    name: Checkov
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkov scan
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform
+          framework: terraform
+          soft_fail: true # mismo motivo que tfsec: el honeypot es intencional
+          output_format: cli
+
+  # --------------------------------------------------------
+  # 4. Python: que los handlers de las Lambdas compilen
+  # --------------------------------------------------------
+  python-lint:
+    name: Python compile check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compilar handlers y scripts
+        run: |
+          python -m py_compile lambdas/*/handler.py
+          python -m py_compile attack_simulation/*.py
