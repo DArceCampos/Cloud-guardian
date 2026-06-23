@@ -47,7 +47,7 @@ def crear_usuario_y_keys(iam) -> tuple[str, dict]:
     print(f"[+] Usuario creado y access key generada: {key['AccessKeyId']}")
 
     # IAM es eventualmente consistente: dale un momento a que la key propague.
-    print("[·] Esperando a que la credencial propague (10s)...")
+    print("[-] Esperando a que la credencial propague (10s)...")
     time.sleep(10)
     return nombre, key
 
@@ -82,9 +82,9 @@ def reconnaissance_con_keys(key: dict) -> None:
         for descripcion, fn in sondas:
             try:
                 fn()
-                print(f"  [✓] {descripcion}")
+                print(f"  [+] {descripcion}")
             except ClientError as e:
-                print(f"  [·] {descripcion}  ({e.response['Error']['Code']})")
+                print(f"  [-] {descripcion}  ({e.response['Error']['Code']})")
 
 
 def limpiar(iam, nombre: str, key_id: str | None) -> None:

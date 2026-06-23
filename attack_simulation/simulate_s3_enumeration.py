@@ -55,12 +55,12 @@ def enumerar_s3(rondas: int) -> None:
             for api, fn in sondas:
                 try:
                     fn(nombre_bucket)
-                    print(f"  [✓] {api:<22} {nombre_bucket}")
+                    print(f"  [+] {api:<22} {nombre_bucket}")
                 except ClientError as e:
                     # AccessDenied / NoSuchBucketPolicy son esperables y útiles:
                     # el atacante igual aprende qué está y qué no está protegido.
                     code = e.response["Error"]["Code"]
-                    print(f"  [·] {api:<22} {nombre_bucket}  ({code})")
+                    print(f"  [-] {api:<22} {nombre_bucket}  ({code})")
         # Sin pausa entre rondas: el volumen rápido es lo que se ve anómalo.
 
     banner("LISTO")

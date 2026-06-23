@@ -94,7 +94,7 @@ def confirmar_laboratorio() -> dict:
 
 def pedir_confirmacion_explicita(accion: str) -> None:
     """Pide al usuario que escriba 'si' para acciones que tocan AWS de verdad."""
-    print(f"\n⚠️  Estás a punto de: {accion}")
+    print(f"\n[ATENCION] Estás a punto de: {accion}")
     respuesta = input("    Escribí 'si' para continuar: ").strip().lower()
     if respuesta != "si":
         sys.exit("[CANCELADO] No se ejecutó nada.")
