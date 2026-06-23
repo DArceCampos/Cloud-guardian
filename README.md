@@ -59,7 +59,7 @@ Cloud-guardian/
 │   └── deploy.yml              #   apply manual (opt-in)
 └── docs/
     ├── architecture.md
-    └── incident_response_runbook.md
+    └── demo.md
 ```
 
 ---
@@ -85,7 +85,7 @@ aws sts get-caller-identity   # verificá que funcionan
 
 ---
 
-## Desplegar (Opción A — apply manual local)
+## Desplegar 
 
 ```bash
 cd terraform
@@ -171,15 +171,6 @@ cd terraform && terraform destroy
   deploy automático en CI hay que migrar el estado a un backend S3 remoto (Opción
   B — ver más abajo).
 
-### Opción B — estado remoto (futuro)
-
-Para deploy automático desde CI necesitás estado compartido:
-
-1. Crear (una sola vez) un bucket S3 + tabla DynamoDB para el lock.
-2. Agregar un bloque `backend "s3"` en `terraform/main.tf`.
-3. `terraform init -migrate-state`.
-4. Cargar los secrets `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `ALERT_EMAIL`
-   en GitHub y reactivar el trigger `push` en `deploy.yml`.
 
 ---
 
@@ -196,11 +187,3 @@ Cada Lambda **se auto-selecciona** según el tipo de recurso del finding: la reg
 de alta severidad dispara las 4, pero cada una hace no-op si el finding no le
 corresponde (una instancia EC2 -> solo aísla; una access key -> solo revoca; etc.).
 
----
-
-## Aviso de uso
-
-Los scripts de `attack_simulation/` simulan ataques **contra tu propia
-infraestructura de laboratorio**. Incluyen guardrails que abortan si las
-credenciales activas no son de la cuenta del lab. Es un proyecto educativo de
-seguridad defensiva -- no lo uses contra infraestructura que no te pertenece.
