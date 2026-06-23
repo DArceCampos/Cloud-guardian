@@ -1,6 +1,6 @@
 name: Deploy
 
-# ⚠️ OPT-IN / MANUAL ÚNICAMENTE (Opción A del proyecto).
+# OPT-IN / MANUAL UNICAMENTE (Opción A del proyecto).
 #
 # El estado de Terraform de este proyecto es LOCAL, así que el camino principal
 # para desplegar es 'terraform apply' desde tu máquina (ver README → "Desplegar").

@@ -4,7 +4,7 @@ Scripts en Python que simulan ataques reales contra **tu propia** infraestructur
 de laboratorio para generar eventos en GuardDuty y CloudTrail. Esos eventos son
 los que, en el Módulo 3, disparan las Lambdas de auto-remediación.
 
-> ⚠️ **Uso autorizado únicamente.** Estos scripts están pensados para correr
+> **Uso autorizado únicamente.** Estos scripts están pensados para correr
 > contra el honeypot y la cuenta AWS que vos mismo desplegaste con Terraform.
 > Incluyen guardrails (`common.confirmar_laboratorio`) que abortan si las
 > credenciales activas no coinciden con la cuenta del laboratorio. No los uses
@@ -33,7 +33,7 @@ pip install -r requirements.txt
 
 Todos piden una confirmación explícita (`si`) antes de tocar AWS.
 
-## ⏱️ Sobre la latencia de GuardDuty (importante)
+## Sobre la latencia de GuardDuty (importante)
 
 Los 3 scripts de ataque generan tráfico/API calls **reales**, pero GuardDuty
 puede tardar de **15 minutos a varias horas** en emitir un finding, y algunos

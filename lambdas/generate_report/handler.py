@@ -57,7 +57,7 @@ def _render_html(datos: dict) -> str:
   th {{ width: 200px; color: #555; }}
 </style></head>
 <body>
-  <h1>🛡️ Reporte de Incidente</h1>
+  <h1>Reporte de Incidente</h1>
   <table>
     <tr><th>Severidad</th><td class="sev-{e(datos['severidad_label'])}">{e(datos['severidad_label'])} ({e(datos['severidad'])})</td></tr>
     <tr><th>Tipo de finding</th><td>{e(datos['tipo'])}</td></tr>

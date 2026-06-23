@@ -8,21 +8,21 @@ según severidad, las Lambdas remedian y todo queda documentado.
 
 ```mermaid
 flowchart TD
-    subgraph SIM["🎯 Attack Simulation (Python)"]
+    subgraph SIM["Attack Simulation (Python)"]
         A1[simulate_s3_enumeration]
         A2[simulate_port_scan]
         A3[simulate_credential_exposure]
         A4[generate_sample_findings]
     end
 
-    subgraph DET["🔍 Detection Layer"]
+    subgraph DET["Detection Layer"]
         GD[GuardDuty]
         CT[CloudTrail]
         CFG[AWS Config]
         SH[Security Hub]
     end
 
-    subgraph RESP["⚡ Response Layer"]
+    subgraph RESP["Response Layer"]
         EB{EventBridge<br/>rules por severidad}
         L1[isolate_ec2]
         L2[revoke_credentials]
@@ -30,7 +30,7 @@ flowchart TD
         L4[generate_report]
     end
 
-    subgraph REP["📊 Reporting Layer"]
+    subgraph REP["Reporting Layer"]
         S3[(S3<br/>reportes JSON/HTML)]
         SNS[SNS → Email/Slack]
     end
@@ -69,7 +69,7 @@ sequenceDiagram
     Note over Lx: Cada Lambda se auto-selecciona<br/>según el tipo de recurso
     Lx->>AWS: Aísla instancia / desactiva key / bloquea IP
     Lx->>Rep: Reporte JSON+HTML a S3 y alerta por email
-    Rep-->>Atk: 🔒 Acceso cortado, incidente documentado
+    Rep-->>Atk: Acceso cortado, incidente documentado
 ```
 
 ## Componentes clave

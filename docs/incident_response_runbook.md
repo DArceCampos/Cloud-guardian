@@ -87,7 +87,7 @@ También deberías recibir uno o más **emails de alerta** por SNS.
 
 ## 5. Revertir acciones (después de confirmar falso positivo)
 
-> ⚠️ Revertí solo cuando hayas confirmado que el finding fue un falso positivo o
+> ATENCION: Revertí solo cuando hayas confirmado que el finding fue un falso positivo o
 > una prueba. Documentá siempre el motivo.
 
 ### Sacar una instancia de cuarentena
