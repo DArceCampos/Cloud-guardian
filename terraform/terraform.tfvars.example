@@ -1,0 +1,15 @@
+# Copiá este archivo a terraform.tfvars y completá los valores:
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# IMPORTANTE: terraform.tfvars está en .gitignore para no subir tu email al repo.
+
+region                 = "us-east-1"
+project_name           = "cloud-threat-detection"
+environment            = "dev"
+honeypot_instance_type = "t2.micro"
+
+# Tu email — vas a recibir un email de confirmación de SNS después del apply
+alert_email = "tu@email.com"
+
+# Opcional: webhook de Slack para alertas
+# slack_webhook_url = "https://hooks.slack.com/services/XXX/YYY/ZZZ"

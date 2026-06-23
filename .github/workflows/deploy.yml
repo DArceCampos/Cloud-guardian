@@ -1,0 +1,79 @@
+name: Deploy
+
+# ⚠️ OPT-IN / MANUAL ÚNICAMENTE (Opción A del proyecto).
+#
+# El estado de Terraform de este proyecto es LOCAL, así que el camino principal
+# para desplegar es 'terraform apply' desde tu máquina (ver README → "Desplegar").
+#
+# Este workflow es solo manual (workflow_dispatch) y NO se dispara en push, para
+# que nunca corra un apply con estado vacío y rompa cosas. Para usarlo de verdad
+# necesitás primero migrar el estado a un backend S3 remoto (Opción B del README).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # --------------------------------------------------------
+  # 1. Gate: validación + escaneo (sin AWS)
+  # --------------------------------------------------------
+  checks:
+    name: Validate & scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.15.6"
+
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working_directory: terraform
+          soft_fail: true
+
+  # --------------------------------------------------------
+  # 2. Deploy: terraform apply (necesita credenciales AWS)
+  #    'needs: checks' garantiza que solo corre si el gate pasó.
+  # --------------------------------------------------------
+  deploy:
+    name: Terraform apply
+    needs: checks
+    runs-on: ubuntu-latest
+    # 'environment' permite exigir aprobación manual antes del apply
+    # (configurable en Settings → Environments → production).
+    environment: production
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.15.6"
+
+      - name: Init
+        run: terraform init
+
+      - name: Plan
+        run: terraform plan -out=tfplan -var="alert_email=${{ secrets.ALERT_EMAIL }}"
+
+      - name: Apply
+        run: terraform apply -auto-approve tfplan
