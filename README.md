@@ -24,6 +24,7 @@ Reporte en S3 (JSON + HTML) + alerta por SNS
 
 > Diagrama completo y flujos en [`docs/architecture.md`](docs/architecture.md).
 > Procedimiento de respuesta en [`docs/incident_response_runbook.md`](docs/incident_response_runbook.md).
+> Demo visual paso a paso en [`docs/demo.md`](docs/demo.md).
 
 ---
 
